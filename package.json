@@ -1,0 +1,33 @@
+{
+  "name": "loopback-ds-readonly-mixin",
+  "version": "2.0.1",
+  "description": "A mixin to enable loopback Model properties to be marked as readonly.",
+  "main": "index.js",
+  "scripts": {
+    "pretest": "jscs index.js && jshint index.js",
+    "test": "mocha --reporter spec test.js"
+  },
+  "keywords": [
+    "loopback",
+    "strongloop"
+  ],
+  "author": "Tom Kirkpatrick",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fullcube/loopback-ds-readonly-mixin.git"
+  },
+  "dependencies": {
+    "debug": "2.x"
+  },
+  "peerDependencies": {
+    "loopback-datasource-juggler": ">=2.18.1"
+  },
+  "devDependencies": {
+    "loopback": "2.x",
+    "loopback-testing": "1.x",
+    "mocha": "2.x",
+    "jscs": "1.13.x",
+    "jshint": "2.7.x"
+  }
+}
