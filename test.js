@@ -130,13 +130,8 @@ describe('loopback datasource readonly property', function() {
           event: 'update',
           user: 'john'
         })
-        .expect(200)
-        .end(function(err, res) {
-          assert.ifError(err);
-          assert.equal(res.body.event, 'edit');
-          assert.equal(res.body.user, 'tom');
-          done();
-      });
+        .expect(403)
+        .end(done);
     });
 
     lt.beforeEach.givenModel('product', {name:'book 1', type:'book', status: 'disabled'}, 'book1');
