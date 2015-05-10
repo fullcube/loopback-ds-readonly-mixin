@@ -2,33 +2,31 @@ READONLY
 =============
 
 This module is designed for the [Strongloop Loopback](https://github.com/strongloop/loopback) framework.
-It makes it possible to mark model properties as Readonly.
+It provides a mixin that makes it possible to mark models or model properties as
+Readonly. A Readonly property may not be written to directly when creating or
+updating models using remote REST methods.
 
-A Readonly property is not sent in the JSON data in the application's HTTP
-response.  The property value is an object that details model properties to be
+The property value is an object that details model properties to be
 treated as readonly properties. Each key in the object must match a property
 name defined for the model.
 
-A feature requests exists against the Loopback project for similar functionality:
-https://github.com/strongloop/loopback/issues/531
-
-This module is implemented with the `before save` [Operation Hook](http://docs.strongloop.com/display/public/LB/Operation+hooks#Operationhooks-beforesave)
-which is relatively new to the loopback framework so make sure you've updated
-your loopback-datasource-juggler module.
+A feature requests exists against the Loopback project for similar functionality
+in core: https://github.com/strongloop/loopback/issues/531
 
 INSTALL
 =============
 
 ```bash
-  npm install --save loopback-ds-readonly-mixin
+npm install --save loopback-ds-readonly-mixin
 ```
 
 SERVER.JS
 =============
 
-In your `server/server.js` file add the following line before the `boot(app, __dirname);` line.
+In your `server/server.js` file add the following line before the
+`boot(app, __dirname);` line.
 
-```js
+```
 ...
 var app = module.exports = loopback();
 ...
@@ -48,7 +46,8 @@ boot(app, __dirname, function(err) {
 CONFIG
 =============
 
-To use with your Models add the `mixins` attribute to the definition object of your model config.
+To use with your Models add the `mixins` attribute to the definition object of
+your model config.
 
 ```json
   {
@@ -64,10 +63,13 @@ To use with your Models add the `mixins` attribute to the definition object of y
   }
 ```
 
+Attempting to update a Readonly model will reult in a 403 error.
+
 OPTIONS
 =============
 
-The specific fields that are marked as readonly can be set by passing an object to the mixin options.
+The specific fields that are to be marked as readonly can be set by passing an
+object to the mixin options.
 
 In this example we mark the `status` and `role` fields as readonly.
 
@@ -76,6 +78,12 @@ In this example we mark the `status` and `role` fields as readonly.
     "name": "Widget",
     "properties": {
       "name": {
+        "type": "string",
+      },
+      "status": {
+        "type": "string",
+      },
+      "role": {
         "type": "string",
       }
     },
@@ -87,6 +95,9 @@ In this example we mark the `status` and `role` fields as readonly.
     }
   }
 ```
+
+Any data set by a REST client in Readonly properties will be stripped out
+on the way to the server and will not be saved on the updated model instance.
 
 TESTING
 =============
