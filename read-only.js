@@ -13,9 +13,9 @@ module.exports = function(Model, options) {
     }
     var properties = (Object.keys(options).length) ? options : null;
     if (properties) {
-      debug('Creating %s : Read only properties are %j', 'modelInstance.Model.modelName', properties);
+      debug('Creating %s : Read only properties are %j', Model.modelName, properties);
       Object.keys(properties).forEach(function(key) {
-        debug('The \'%s\' property is readonly, removing incoming data', key);
+        debug('The \'%s\' property is read only, removing incoming data', key);
         delete body[key];
       });
       next();
