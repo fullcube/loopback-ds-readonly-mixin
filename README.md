@@ -20,6 +20,30 @@ INSTALL
 npm install --save loopback-ds-readonly-mixin
 ```
 
+MIXINSOURCES
+=============
+With [loopback-boot@v2.8.0](https://github.com/strongloop/loopback-boot/)  [mixinSources](https://github.com/strongloop/loopback-boot/pull/131) have been implemented in a way which allows for loading this mixin without changes to the `server.js` file previously required.
+
+Add the `mixins` property to your `server/model-config.json` like the following:
+
+```json
+{
+  "_meta": {
+    "sources": [
+      "loopback/common/models",
+      "loopback/server/models",
+      "../common/models",
+      "./models"
+    ],
+    "mixins": [
+      "loopback/common/mixins",
+      "../node_modules/loopback-ds-readonly-mixin",
+      "../common/mixins"
+    ]
+  }
+}
+```
+
 SERVER.JS
 =============
 

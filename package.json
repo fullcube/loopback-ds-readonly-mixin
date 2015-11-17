@@ -18,7 +18,8 @@
     "url": "https://github.com/fullcube/loopback-ds-readonly-mixin.git"
   },
   "dependencies": {
-    "debug": "2.x"
+    "debug": "2.x",
+    "depd": "^1.1.0"
   },
   "peerDependencies": {
     "loopback-datasource-juggler": ">=2.18.1"

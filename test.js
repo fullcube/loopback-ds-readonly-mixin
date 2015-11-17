@@ -144,7 +144,7 @@ describe('loopback datasource readonly property', function() {
         .query(query)
         .send(data)
         .set('Accept', 'application/json')
-        .expect(204)
+        .expect(200)
         .end(function(err, res) {
           assert.ifError(err);
           self.Product.findById(self.book1.id, function(err, b1) {
