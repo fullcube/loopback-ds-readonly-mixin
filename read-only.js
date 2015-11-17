@@ -5,8 +5,6 @@ module.exports = function(Model, options) {
 
   debug('ReadOnly mixin for Model %s', Model.modelName);
 
-  var loopback = require('loopback');
-
   // Make sure emailVerified is not set by creation
   Model.stripReadOnlyProperties = function(ctx, modelInstance, next) {
     var body = ctx.req.body;
