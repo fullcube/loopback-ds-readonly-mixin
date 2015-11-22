@@ -1,0 +1,28 @@
+{
+  "name": "Person",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "methods": {},
+  "mixins": {
+    "Readonly": {
+      "status": true,
+      "role": true
+    }
+  }
+}

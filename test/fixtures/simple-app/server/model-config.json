@@ -1,0 +1,22 @@
+{
+  "_meta": {
+    "sources": [
+      "../common/models"
+    ],
+    "mixins": [
+      "../../../../lib/index.js"
+    ]
+  },
+  "AuditTrail": {
+    "dataSource": "db",
+    "public": true
+  },
+  "Person": {
+    "dataSource": "db",
+    "public": true
+  },
+  "Product": {
+    "dataSource": "db",
+    "public": true
+  }
+}

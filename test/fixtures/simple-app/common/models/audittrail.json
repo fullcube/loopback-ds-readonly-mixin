@@ -1,0 +1,22 @@
+{
+  "name": "AuditTrail",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "event": {
+      "type": "string"
+    },
+    "user": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "methods": {},
+  "mixins": {
+    "Readonly": true
+  }
+}

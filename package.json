@@ -48,6 +48,8 @@
     "jscs": "latest",
     "jshint": "latest",
     "loopback": ">=2.22.0",
+    "loopback-boot": ">=2.8.0",
+    "loopback-component-explorer": "2.1.1",
     "loopback-testing": "1.2.0",
     "mocha": "latest",
     "nyc": "latest"
