@@ -1,6 +1,9 @@
 READONLY
 =============
 
+[![Circle CI](https://circleci.com/gh/fullcube/loopback-ds-readonly-mixin.svg?style=svg)](https://circleci.com/gh/fullcube/loopback-ds-readonly-mixin) [![Coverage Status](https://coveralls.io/repos/fullcube/loopback-ds-readonly-mixin/badge.svg?branch=master&service=github)](https://coveralls.io/github/fullcube/loopback-ds-readonly-mixin?branch=master) [![Dependencies](http://img.shields.io/david/fullcube/loopback-ds-readonly-mixin.svg?style=flat)](https://david-dm.org/fullcube/loopback-ds-readonly-mixin)
+
+
 This module is designed for the [Strongloop Loopback](https://github.com/strongloop/loopback) framework.
 It provides a mixin that makes it possible to mark models or model properties as
 Readonly. A Readonly property may not be written to directly when creating or

@@ -1,14 +1,13 @@
-/* jshint mocha: true */
-
-var assert = require('assert');
 var loopback = require('loopback');
 var lt = require('loopback-testing');
+var chai = require('chai');
+var expect = chai.expect;
 
 // Create a new loopback app.
 var app = loopback();
 
 // import our Readonly mixin.
-require('./')(app);
+require('../lib')(app);
 
 describe('loopback datasource readonly property', function() {
 
@@ -48,9 +47,9 @@ describe('loopback datasource readonly property', function() {
     lt.beforeEach.givenModel('product', {name:'some book', type:'book', status: 'pending'});
 
     it('should save readonly properties on create.', function(done) {
-      assert.equal(this.product.name, 'some book');
-      assert.equal(this.product.type, 'book');
-      assert.equal(this.product.status, 'pending');
+      expect(this.product.name).to.equal('some book');
+      expect(this.product.type).to.equal('book');
+      expect(this.product.status).to.equal('pending');
       done();
     });
 
@@ -59,10 +58,10 @@ describe('loopback datasource readonly property', function() {
       self.product.name = 'some other book';
       self.product.status = 'disabled';
       self.product.save(function(err, p) {
-        assert.ifError(err);
-        assert.equal(p.name, self.product.name);
-        assert.equal(p.type, self.product.type);
-        assert.equal(p.status, self.product.status);
+        expect(err).to.not.exist;
+        expect(p.name).to.equal(self.product.name);
+        expect(p.type).to.equal(self.product.type);
+        expect(p.status).to.equal(self.product.status);
         done();
       });
     });
@@ -79,9 +78,9 @@ describe('loopback datasource readonly property', function() {
         })
         .expect(200)
         .end(function(err, res) {
-          assert.ifError(err);
-          assert.equal(res.body.name, 'test product');
-          assert(!res.body.status);
+          expect(err).to.not.exist;
+          expect(res.body.name).to.equal('test product');
+          expect(res.body.status).to.not.exist;
           done();
       });
     });
@@ -96,9 +95,9 @@ describe('loopback datasource readonly property', function() {
         })
         .expect(200)
         .end(function(err, res) {
-          assert.ifError(err);
-          assert.equal(res.body.name, 'updated name');
-          assert.equal(res.body.status, 'pending');
+          expect(err).to.not.exist;
+          expect(res.body.name).to.equal('updated name');
+          expect(res.body.status).to.equal('pending');
           done();
       });
     });
@@ -114,10 +113,10 @@ describe('loopback datasource readonly property', function() {
         })
         .expect(200)
         .end(function(err, res) {
-          assert.ifError(err);
-          assert.equal(res.body.name, 'Tom (edited)');
-          assert.equal(res.body.status, 'disabled');
-          assert.equal(res.body.role, 'user');
+          expect(err).to.not.exist;
+          expect(res.body.name).to.equal('Tom (edited)');
+          expect(res.body.status).to.equal('disabled');
+          expect(res.body.role).to.equal('user');
           done();
       });
     });
@@ -146,13 +145,13 @@ describe('loopback datasource readonly property', function() {
         .set('Accept', 'application/json')
         .expect(200)
         .end(function(err, res) {
-          assert.ifError(err);
+          expect(err).to.not.exist;
           self.Product.findById(self.book1.id, function(err, b1) {
-            assert.ifError(err);
-            assert.equal(b1.status, self.book1.status);
+            expect(err).to.not.exist;
+            expect(b1.status).to.equal(self.book1.status);
             self.Product.findById(self.book2.id, function(err, b2) {
-              assert.ifError(err);
-              assert.equal(b2.status, self.book2.status);
+              expect(err).to.not.exist;
+              expect(b2.status).to.equal(self.book2.status);
               done();
             });
           });
