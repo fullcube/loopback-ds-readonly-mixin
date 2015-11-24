@@ -4,47 +4,14 @@ var chai = require('chai');
 var expect = chai.expect;
 
 // Create a new loopback app.
-var app = loopback();
+var app = require('./fixtures/simple-app/server/server.js');
 
-// import our ReadOnly mixin.
-require('../lib')(app);
-
-describe('loopback datasource readonly property', function() {
-
-  beforeEach(function(done) {
-    // A model with 1 readonly property.
-    var Product = this.Product = loopback.PersistedModel.extend('product',
-      { name: String, type: String, status: String },
-      { mixins: { ReadOnly: { status: true } } }
-    );
-    Product.attachTo(loopback.memory());
-    app.model(Product);
-
-    // A model with 2 readonly properties.
-    var Person = this.Person = loopback.PersistedModel.extend('person',
-      { name: String, status: String, role: String },
-      { mixins: { ReadOnly: { status: true, role: true } } }
-    );
-    Person.attachTo(loopback.memory());
-    app.model(Person);
-
-    // A model that is fully readony.
-    var AuditTrail = this.AuditTrail = loopback.PersistedModel.extend('audittrail',
-      { event: String, user: String },
-      { mixins: { ReadOnly: true } }
-    );
-    AuditTrail.attachTo(loopback.memory());
-    app.model(AuditTrail);
-
-    app.use(loopback.rest());
-    app.set('legacyExplorer', false);
-    done();
-  });
+describe('loopback datasource readonly property (mixin sources.js)', function() {
 
   lt.beforeEach.withApp(app);
 
   describe('when called internally', function() {
-    lt.beforeEach.givenModel('product', {name: 'some book', type: 'book', status: 'pending'});
+    lt.beforeEach.givenModel('Product', {name: 'some book', type: 'book', status: 'pending'}, 'product');
 
     it('should save readonly properties on create.', function(done) {
       expect(this.product.name).to.equal('some book');
@@ -68,10 +35,10 @@ describe('loopback datasource readonly property', function() {
   });
 
   describe('when called remotely', function() {
-
+    lt.beforeEach.givenModel('Product', {name: 'some book', type: 'book', status: 'pending'}, 'product');
     it('should not save readonly properties on create.', function(done) {
       var product = this.product;
-      this.post('/products')
+      this.post('/api/products')
         .send({
           name: 'test product',
           status: 'active'
@@ -85,10 +52,10 @@ describe('loopback datasource readonly property', function() {
         });
     });
 
-    lt.beforeEach.givenModel('product', {name: 'some book', type: 'book', status: 'pending'});
+    lt.beforeEach.givenModel('Product', {name: 'some book', type: 'book', status: 'pending'}, 'product');
     it('should not change readonly properties on update (single readonly property)', function(done) {
       var product = this.product;
-      this.put('/products/' + product.id)
+      this.put('/api/products/' + product.id)
         .send({
           name: 'updated name',
           status: 'disabled'
@@ -102,10 +69,10 @@ describe('loopback datasource readonly property', function() {
         });
     });
 
-    lt.beforeEach.givenModel('person', {name: 'Tom', status: 'disabled', role: 'user'});
+    lt.beforeEach.givenModel('Person', {name: 'Tom', status: 'disabled', role: 'user'}, 'Person');
     it('should not change readonly properties on update (multiple readonly properties)', function(done) {
-      var person = this.person;
-      this.put('/people/' + person.id)
+      var Person = this.Person;
+      this.put('/api/people/' + Person.id)
         .send({
           name: 'Tom (edited)',
           status: 'active',
@@ -121,10 +88,10 @@ describe('loopback datasource readonly property', function() {
         });
     });
 
-    lt.beforeEach.givenModel('audittrail', {event: 'edit', user: 'tom'});
+    lt.beforeEach.givenModel('AuditTrail', {event: 'edit', user: 'tom'}, 'audittrail');
     it('should not change readonly properties on update (full read only model)', function(done) {
       var audittrail = this.audittrail;
-      this.put('/audittrails/' + audittrail.id)
+      this.put('/api/audittrails/' + audittrail.id)
         .send({
           event: 'update',
           user: 'john'
@@ -133,23 +100,23 @@ describe('loopback datasource readonly property', function() {
         .end(done);
     });
 
-    lt.beforeEach.givenModel('product', {name: 'book 1', type: 'book', status: 'disabled'}, 'book1');
-    lt.beforeEach.givenModel('product', {name: 'book 12', type: 'book', status: 'pending'}, 'book2');
+    lt.beforeEach.givenModel('Product', {name: 'book 1', type: 'book', status: 'disabled'}, 'book1', 'product');
+    lt.beforeEach.givenModel('Product', {name: 'book 12', type: 'book', status: 'pending'}, 'book2', 'product');
     it('should not change readonly properties with bulk updates', function(done) {
       var self = this;
-      var data = { 'status': 'disabled' };
-      var query = { 'where': {'type': 'book' }};
-      self.post('/products/update')
+      var data = { status: 'disabled' };
+      var query = { where: {type: 'book' }};
+      self.post('/api/products/update')
         .query(query)
         .send(data)
         .set('Accept', 'application/json')
         .expect(200)
         .end(function(err, res) {
           expect(err).to.not.exist;
-          self.Product.findById(self.book1.id, function(err, b1) {
+          app.models.Product.findById(self.book1.id, function(err, b1) {
             expect(err).to.not.exist;
             expect(b1.status).to.equal(self.book1.status);
-            self.Product.findById(self.book2.id, function(err, b2) {
+            app.models.Product.findById(self.book2.id, function(err, b2) {
               expect(err).to.not.exist;
               expect(b2.status).to.equal(self.book2.status);
               done();

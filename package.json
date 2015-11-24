@@ -28,7 +28,7 @@
   ],
   "scripts": {
     "lint": "jscs lib && jshint lib",
-    "test": "nyc mocha -R spec --timeout 10000 test/test.js",
+    "test": "nyc mocha -R spec --timeout 10000 test",
     "test:watch": "npm run test -- -w",
     "pretest": "npm run lint",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
