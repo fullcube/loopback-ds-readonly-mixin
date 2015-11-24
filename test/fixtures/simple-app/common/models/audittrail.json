@@ -17,6 +17,6 @@
   "relations": {},
   "methods": {},
   "mixins": {
-    "Readonly": true
+    "ReadOnly": true
   }
 }

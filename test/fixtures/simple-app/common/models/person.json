@@ -20,7 +20,7 @@
   "relations": {},
   "methods": {},
   "mixins": {
-    "Readonly": {
+    "ReadOnly": {
       "status": true,
       "role": true
     }

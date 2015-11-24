@@ -6,7 +6,7 @@ READONLY
 
 This module is designed for the [Strongloop Loopback](https://github.com/strongloop/loopback) framework.
 It provides a mixin that makes it possible to mark models or model properties as
-Readonly. A Readonly property may not be written to directly when creating or
+read only. A read only property may not be written to directly when creating or
 updating models using remote REST methods.
 
 The property value is an object that details model properties to be
@@ -57,7 +57,7 @@ In your `server/server.js` file add the following line before the
 ...
 var app = module.exports = loopback();
 ...
-// Add Readonly Mixin to loopback
+// Add ReadOnly Mixin to loopback
 require('loopback-ds-readonly-mixin')(app);
 
 boot(app, __dirname, function(err) {
@@ -85,12 +85,12 @@ your model config.
       }
     },
     "mixins": {
-      "Readonly" : true
+      "ReadOnly" : true
     }
   }
 ```
 
-Attempting to update a Readonly model will reult in a 403 error.
+Attempting to update a ReadOnly model will reult in a 403 error.
 
 OPTIONS
 =============
@@ -115,7 +115,7 @@ In this example we mark the `status` and `role` fields as readonly.
       }
     },
     "mixins": {
-      "Readonly" : {
+      "ReadOnly" : {
         "status" : true,
         "role" : true
       }
@@ -123,7 +123,7 @@ In this example we mark the `status` and `role` fields as readonly.
   }
 ```
 
-Any data set by a REST client in Readonly properties will be stripped out
+Any data set by a REST client in ReadOnly properties will be stripped out
 on the way to the server and will not be saved on the updated model instance.
 
 TESTING
