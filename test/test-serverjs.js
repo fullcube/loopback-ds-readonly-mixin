@@ -23,7 +23,7 @@ describe('loopback datasource readonly property (server.js)', function() {
     // A model with 2 readonly properties.
     var Person = this.Person = loopback.PersistedModel.extend('person',
       { name: String, status: String, role: String },
-      { mixins: { ReadOnly: { status: true, role: true } } }
+      { mixins: { ReadOnly: { status: true, role: "createOnly" } } }
     );
     Person.attachTo(loopback.memory());
     app.model(Person);

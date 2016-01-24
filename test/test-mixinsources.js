@@ -52,6 +52,25 @@ describe('loopback datasource readonly property (mixin sources.js)', function() 
         });
     });
 
+    lt.beforeEach.givenModel('Person', {name: 'Tom', status: 'disabled', role: 'user'}, 'Person');
+    it('should save createOnly properties on create.', function(done) {
+      var Person = this.Person;
+      this.post('/api/people')
+        .send({
+          name: 'John',
+          status: 'active',
+          role: 'other user'
+        })
+        .expect(200)
+        .end(function(err, res) {
+          expect(err).to.not.exist;
+          expect(res.body.name).to.equal('John');
+          expect(res.body.status).to.not.exist;
+          expect(res.body.role).to.equal('other user');
+          done();
+        });
+    });
+
     lt.beforeEach.givenModel('Product', {name: 'some book', type: 'book', status: 'pending'}, 'product');
     it('should not change readonly properties on update (single readonly property)', function(done) {
       var product = this.product;
@@ -76,7 +95,7 @@ describe('loopback datasource readonly property (mixin sources.js)', function() 
         .send({
           name: 'Tom (edited)',
           status: 'active',
-          role: 'user'
+          role: 'user (edited)'
         })
         .expect(200)
         .end(function(err, res) {
