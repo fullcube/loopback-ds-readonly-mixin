@@ -90,7 +90,7 @@ your model config.
   }
 ```
 
-Attempting to update a ReadOnly model will reult in a 403 error.
+Attempting to update a ReadOnly model will reult in a 403 error for this entire model.
 
 OPTIONS
 =============
@@ -98,7 +98,8 @@ OPTIONS
 The specific fields that are to be marked as readonly can be set by passing an
 object to the mixin options.
 
-In this example we mark the `status` and `role` fields as readonly.
+In this example we mark the `status` field as readonly for all actions, but the
+`role` field can be set on create, but not for updates (it is marked `"createOnly"`).
 
 ```json
   {
@@ -117,7 +118,7 @@ In this example we mark the `status` and `role` fields as readonly.
     "mixins": {
       "ReadOnly" : {
         "status" : true,
-        "role" : true
+        "role" : "createOnly"
       }
     }
   }
@@ -125,6 +126,8 @@ In this example we mark the `status` and `role` fields as readonly.
 
 Any data set by a REST client in ReadOnly properties will be stripped out
 on the way to the server and will not be saved on the updated model instance.
+However, any method calls from within the server application can still 
+update any of this data.
 
 TESTING
 =============
