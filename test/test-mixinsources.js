@@ -36,6 +36,11 @@ describe('loopback datasource readonly property (mixin sources.js)', function() 
 
   describe('when called remotely', function() {
     lt.beforeEach.givenModel('Product', {name: 'some book', type: 'book', status: 'pending'}, 'product');
+    lt.beforeEach.givenModel('Person', {name: 'Tom', status: 'disabled', role: 'user'}, 'Person');
+    lt.beforeEach.givenModel('AuditTrail', {event: 'edit', user: 'tom'}, 'audittrail');
+    lt.beforeEach.givenModel('Product', {name: 'book 1', type: 'book', status: 'disabled'}, 'book1', 'product');
+    lt.beforeEach.givenModel('Product', {name: 'book 12', type: 'book', status: 'pending'}, 'book2', 'product');
+    
     it('should not save readonly properties on create.', function(done) {
       var product = this.product;
       this.post('/api/products')
@@ -52,7 +57,6 @@ describe('loopback datasource readonly property (mixin sources.js)', function() 
         });
     });
 
-    lt.beforeEach.givenModel('Person', {name: 'Tom', status: 'disabled', role: 'user'}, 'Person');
     it('should save createOnly properties on create.', function(done) {
       var Person = this.Person;
       this.post('/api/people')
@@ -71,7 +75,6 @@ describe('loopback datasource readonly property (mixin sources.js)', function() 
         });
     });
 
-    lt.beforeEach.givenModel('Product', {name: 'some book', type: 'book', status: 'pending'}, 'product');
     it('should not change readonly properties on update (single readonly property)', function(done) {
       var product = this.product;
       this.put('/api/products/' + product.id)
@@ -88,7 +91,6 @@ describe('loopback datasource readonly property (mixin sources.js)', function() 
         });
     });
 
-    lt.beforeEach.givenModel('Person', {name: 'Tom', status: 'disabled', role: 'user'}, 'Person');
     it('should not change readonly properties on update (multiple readonly properties)', function(done) {
       var Person = this.Person;
       this.put('/api/people/' + Person.id)
@@ -107,7 +109,6 @@ describe('loopback datasource readonly property (mixin sources.js)', function() 
         });
     });
 
-    lt.beforeEach.givenModel('AuditTrail', {event: 'edit', user: 'tom'}, 'audittrail');
     it('should not change readonly properties on update (full read only model)', function(done) {
       var audittrail = this.audittrail;
       this.put('/api/audittrails/' + audittrail.id)
@@ -119,8 +120,6 @@ describe('loopback datasource readonly property (mixin sources.js)', function() 
         .end(done);
     });
 
-    lt.beforeEach.givenModel('Product', {name: 'book 1', type: 'book', status: 'disabled'}, 'book1', 'product');
-    lt.beforeEach.givenModel('Product', {name: 'book 12', type: 'book', status: 'pending'}, 'book2', 'product');
     it('should not change readonly properties with bulk updates', function(done) {
       var self = this;
       var data = { status: 'disabled' };
