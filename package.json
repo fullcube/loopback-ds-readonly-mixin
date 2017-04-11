@@ -35,22 +35,22 @@
     "outdated": "npm outdated --depth=0"
   },
   "dependencies": {
-    "debug": "2.x",
+    "debug": "^2.6.3",
     "depd": "^1.1.0"
   },
   "peerDependencies": {
-    "loopback-datasource-juggler": ">=2.18.1"
+    "loopback-datasource-juggler": "^2.18.1"
   },
   "devDependencies": {
     "bluebird": "latest",
     "chai": "latest",
-    "coveralls": "^2.11.4",
+    "coveralls": "latest",
     "jscs": "latest",
     "jshint": "latest",
-    "loopback": ">=2.22.0",
-    "loopback-boot": ">=2.8.0",
-    "loopback-component-explorer": "2.1.1",
-    "loopback-testing": "1.2.0",
+    "loopback": "^2.22.0",
+    "loopback-boot": "^2.24.0",
+    "loopback-component-explorer": "^2.1.1",
+    "loopback-testing": "^1.4.0",
     "mocha": "latest",
     "nyc": "latest"
   }
