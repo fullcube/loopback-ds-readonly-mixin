@@ -52,6 +52,7 @@
     "loopback-component-explorer": "^2.1.1",
     "loopback-testing": "^1.4.0",
     "mocha": "latest",
-    "nyc": "latest"
+    "nyc": "latest",
+    "supertest": "^3.0.0"
   }
 }

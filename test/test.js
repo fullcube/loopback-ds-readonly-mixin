@@ -4,6 +4,14 @@ var chai = require('chai');
 var expect = chai.expect;
 var TestDataBuilder = lt.TestDataBuilder
 var ref = TestDataBuilder.ref
+var request = require('supertest')
+
+// Helper function to make api requests.
+function json(verb, reqUrl) {
+  return request(app)[verb](reqUrl)
+    .set('Content-Type', 'application/json')
+    .set('Accept', 'application/json')
+}
 
 // Create a new loopback app.
 var app = require('./fixtures/simple-app/server/server.js');
@@ -54,13 +62,13 @@ describe('loopback datasource readonly property (mixin sources.js)', function() 
           .end(function(err, res) {
             expect(err).to.not.exist;
             expect(res.body.name).to.equal('test product');
-            expect(res.body.status).to.not.exist;
+            expect(res.body.status).to.equal('temp');
             done();
           });
       });
     })
 
-    describe('Update', function() {
+    describe('updateAttributes', function() {
       lt.beforeEach.givenModel('Product', {name: 'some book', type: 'book', status: 'pending'}, 'product');
       it('should not change readonly properties on update (single readonly property)', function(done) {
         var product = this.product;
@@ -110,39 +118,83 @@ describe('loopback datasource readonly property (mixin sources.js)', function() 
       });
     });
 
-
-    describe('Update multiple', function() {
-      lt.beforeEach.givenModel('Product', {name: 'book 1', type: 'book', status: 'disabled'}, 'book1', 'product');
-      lt.beforeEach.givenModel('Product', {name: 'book 12', type: 'book', status: 'pending'}, 'book2', 'product');
-      it('should not change readonly properties with bulk updates', function(done) {
-        var self = this;
-        var data = { status: 'disabled' };
-        var query = { where: {type: 'book' }};
-        self.post('/api/products/update')
-          .query(query)
+    describe('upsert_put', function() {
+      lt.beforeEach.givenModel('Product', {name: 'book 1', type: 'book', status: 'pending'}, 'product')
+      it('should not change readonly properties with bulk updates', function() {
+        var data = { id: this.product.id, status: 'disabled' }
+        return json('put', '/api/products')
           .send(data)
-          .set('Accept', 'application/json')
-          .expect(200)
-          .end(function(err, res) {
-            expect(err).to.not.exist;
-            app.models.Product.findById(self.book1.id, function(err, b1) {
-              expect(err).to.not.exist;
-              expect(b1.status).to.equal(self.book1.status);
-              app.models.Product.findById(self.book2.id, function(err, b2) {
-                expect(err).to.not.exist;
-                expect(b2.status).to.equal(self.book2.status);
-                done();
-              });
-            });
-          });
-      });
-    });
+          .then(res => app.models.Product.findById(this.product.id))
+          .then(product => expect(product.status).to.equal('pending'))
+      })
+    })
+
+    describe('upsert_patch', function() {
+      lt.beforeEach.givenModel('Product', {name: 'book 1', type: 'book', status: 'pending'}, 'product');
+      it('should not change readonly properties', function() {
+        var data = { id: this.product.id, status: 'disabled' }
+        return json('patch', '/api/products')
+          .send(data)
+          .then(res => app.models.Product.findById(this.product.id))
+          .then(product => expect(product.status).to.equal('pending'))
+      })
+    })
+
+    describe('replaceById', function() {
+      lt.beforeEach.givenModel('Product', {name: 'book 1', type: 'book', status: 'pending'}, 'product');
+      it('should not change readonly properties', function() {
+        var data = { id: this.product.id, status: 'disabled' }
+        return json('post', `/api/products/${this.product.id}`)
+          .send(data)
+          .then(res => app.models.Product.findById(this.product.id))
+          .then(product => expect(product.status).to.equal('pending'))
+      })
+    })
+
+    describe('replaceOrCreate', function() {
+      lt.beforeEach.givenModel('Product', {name: 'book 1', type: 'book', status: 'pending'}, 'product');
+      it('should not set readonly properties', function() {
+        var data = { id: this.product.id, status: 'disabled' }
+        return json('post', '/api/products/replaceOrCreate')
+          .send(data)
+          .then(res => app.models.Product.findById(this.product.id))
+          .then(product => expect(product.status).to.equal('temp'))
+      })
+    })
+
+    describe('updateAll', function() {
+      lt.beforeEach.givenModel('Product', {name: 'book 1', type: 'book', status: 'disabled'}, 'book1')
+      lt.beforeEach.givenModel('Product', {name: 'book 2', type: 'book', status: 'pending'}, 'book2')
+      it('should not change readonly properties with bulk updates', function() {
+        return json('post', '/api/products/update')
+          .query({ where: {type: 'book' }})
+          .send({ status: 'disabled' })
+          .then(res => app.models.Product.findById(this.book1.id))
+          .then(book1 => expect(book1.status).to.equal('disabled'))
+          .then(res => app.models.Product.findById(this.book2.id))
+          .then(book2 => expect(book2.status).to.equal('pending'))
+      })
+    })
+
+    describe('upsertWithWhere', function() {
+      lt.beforeEach.givenModel('Product', { name: 'book 1', type: 'book', status: 'disabled' }, 'product')
+      it('should not change readonly properties with bulk updates', function() {
+        return json('post', '/api/products/upsertWithWhere')
+          .query({ where: { id: this.product.id } })
+          .send({ status: 'active', name: 'book 1 (updated)' })
+          .then(res => app.models.Product.findById(this.product.id))
+          .then(product => {
+            expect(product.status).to.equal('disabled')
+            expect(product.name).to.equal('book 1 (updated)')
+          })
+      })
+    })
 
     describe('Update via relationship', function() {
       before(function(done) {
         new TestDataBuilder()
           .define('person', app.models.Person, { name: 'Tom', status: 'disabled', role: 'user' })
-          .define('product', app.models.Product, { name: 'book 12', type: 'book', status: 'pending', personId: ref('person.id') })
+          .define('product', app.models.Product, { name: 'book 2', type: 'book', status: 'pending', personId: ref('person.id') })
           .buildTo(this, done)
       })
 
