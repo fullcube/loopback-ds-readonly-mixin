@@ -40,7 +40,7 @@ Add the `mixins` property to your `server/model-config.json` like the following:
     ],
     "mixins": [
       "loopback/common/mixins",
-      "../node_modules/loopback-ds-readonly-mixin",
+      "../node_modules/loopback-ds-readonly-mixin/lib",
       "../common/mixins"
     ]
   }
