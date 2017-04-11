@@ -14,10 +14,20 @@
     },
     "status": {
       "type": "string"
+    },
+    "personId": {
+      "type": "string"
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "person": {
+      "type": "belongsTo",
+      "model": "Person",
+      "foreignKey": "personId",
+      "description": "Returns the person associated with a product."
+    }
+  },
   "methods": {},
   "mixins": {
     "ReadOnly": {

@@ -17,7 +17,14 @@
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "products": {
+      "type": "hasMany",
+      "model": "Product",
+      "foreignKey": "personId",
+      "description": "Returns a list of products associated with a person."
+    }
+  },
   "methods": {},
   "mixins": {
     "ReadOnly": {
