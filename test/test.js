@@ -69,7 +69,7 @@ describe('loopback datasource readonly property (mixin sources.js)', function() 
     })
 
     describe('updateAttributes', function() {
-      lt.beforeEach.givenModel('Product', {name: 'some book', type: 'book', status: 'pending'}, 'product');
+      lt.beforeEach.givenModel('Product', {name: 'some book', type: 'book'}, 'product');
       it('should not change readonly properties on update (single readonly property)', function(done) {
         var product = this.product;
         this.put('/api/products/' + product.id)
@@ -81,41 +81,86 @@ describe('loopback datasource readonly property (mixin sources.js)', function() 
           .end(function(err, res) {
             expect(err).to.not.exist;
             expect(res.body.name).to.equal('updated name');
-            expect(res.body.status).to.equal('pending');
+            expect(res.body.status).to.equal('temp');
             done();
           });
       });
 
-      lt.beforeEach.givenModel('Person', {name: 'Tom', status: 'disabled', role: 'user'}, 'Person');
+      lt.beforeEach.givenModel('Person', {name: 'Tom', status: 'disabled', role: 'user'}, 'person');
       it('should not change readonly properties on update (multiple readonly properties)', function(done) {
-        var Person = this.Person;
-        this.put('/api/people/' + Person.id)
+        var Person = this.person;
+        this.put('/api/people/' + this.person.id)
           .send({
             name: 'Tom (edited)',
             status: 'active',
-            role: 'user'
+            role: 'user',
           })
           .expect(200)
           .end(function(err, res) {
             expect(err).to.not.exist;
             expect(res.body.name).to.equal('Tom (edited)');
-            expect(res.body.status).to.equal('disabled');
-            expect(res.body.role).to.equal('user');
+            expect(res.body.status).to.be.undefined;
+            expect(res.body.role).to.be.undefined;
             done();
+          });
+      });
+    });
+
+    describe('patchAttributes', function() {
+      lt.beforeEach.givenModel('Product', {name: 'some book', type: 'book', status: 'disabled'}, 'product');
+      it('should not change readonly properties on update (single readonly property)', function() {
+        var product = this.product;
+        return json('patch', '/api/products/' + product.id)
+          .send({
+            name: 'updated name',
+            status: 'disabled'
+          })
+          .expect(200)
+          .then(res => {
+            expect(res.body.name).to.equal('updated name');
+            expect(res.body.status).to.equal('disabled');
+          });
+      });
+
+      lt.beforeEach.givenModel('Person', {name: 'Tom', status: 'disabled', role: 'user'}, 'person');
+      it('should not change readonly properties on update (multiple readonly properties)', function() {
+        var Person = this.person;
+        return json('patch', '/api/people/' + this.person.id)
+          .send({
+            name: 'Tom (edited)',
+            status: 'active',
+            role: 'user',
+          })
+          .expect(200)
+          .then(res => {
+            expect(res.body.name).to.equal('Tom (edited)');
+            expect(res.body.status).to.equal('disabled');
+            expect(res.body.role).to.equal('user')
           });
       });
 
       lt.beforeEach.givenModel('AuditTrail', {event: 'edit', user: 'tom'}, 'audittrail');
-      it('should not change readonly properties on update (full read only model)', function(done) {
+      it('should not change readonly properties on update (full read only model)', function() {
         var audittrail = this.audittrail;
-        this.put('/api/audittrails/' + audittrail.id)
+        return json('patch', '/api/audittrails/' + audittrail.id)
           .send({
             event: 'update',
             user: 'john'
           })
-          .expect(403)
-          .end(done);
+          .expect(403);
       });
+    });
+
+    lt.beforeEach.givenModel('AuditTrail', {event: 'edit', user: 'tom'}, 'audittrail');
+    it('should not change readonly properties on update (full read only model)', function(done) {
+      var audittrail = this.audittrail;
+      this.put('/api/audittrails/' + audittrail.id)
+        .send({
+          event: 'update',
+          user: 'john'
+        })
+        .expect(403)
+        .end(done);
     });
 
     describe('upsert_put', function() {
@@ -125,7 +170,7 @@ describe('loopback datasource readonly property (mixin sources.js)', function() 
         return json('put', '/api/products')
           .send(data)
           .then(res => app.models.Product.findById(this.product.id))
-          .then(product => expect(product.status).to.equal('pending'))
+          .then(product => expect(product.status).to.equal('temp'))
       })
     })
 
@@ -144,19 +189,18 @@ describe('loopback datasource readonly property (mixin sources.js)', function() 
       lt.beforeEach.givenModel('Product', {name: 'book 1', type: 'book', status: 'pending'}, 'product');
       it('should not change readonly properties', function() {
         var data = { id: this.product.id, status: 'disabled' }
-        return json('post', `/api/products/${this.product.id}`)
+        return json('post', `/api/products/${this.product.id}/replace`)
           .send(data)
           .then(res => app.models.Product.findById(this.product.id))
-          .then(product => expect(product.status).to.equal('pending'))
+          .then(product => expect(product.status).to.equal('temp'))
       })
     })
 
     describe('replaceOrCreate', function() {
       lt.beforeEach.givenModel('Product', {name: 'book 1', type: 'book', status: 'pending'}, 'product');
       it('should not set readonly properties', function() {
-        var data = { id: this.product.id, status: 'disabled' }
         return json('post', '/api/products/replaceOrCreate')
-          .send(data)
+          .send(Object.assign(this.product.toJSON(), { status: 'disabled' }))
           .then(res => app.models.Product.findById(this.product.id))
           .then(product => expect(product.status).to.equal('temp'))
       })
