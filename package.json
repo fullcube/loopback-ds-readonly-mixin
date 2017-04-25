@@ -27,28 +27,30 @@
     "test"
   ],
   "scripts": {
-    "lint": "jscs lib && jshint lib",
-    "test": "nyc mocha -R spec --timeout 10000 test",
+    "dev": "DEBUG=*:ping NODE_ENV=development nodemon test/fixtures/simple-app/server/server.js --watch ./lib --watch ./test --ignore db.json --ext js,json",
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "NODE_ENV=test nyc --reporter=lcov --reporter=text --reporter=text-summary mocha test/*test.js",
     "test:watch": "npm run test -- -w",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "outdated": "npm outdated --depth=0"
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "dependencies": {
     "debug": "^2.6.4",
     "depd": "^1.1.0"
   },
   "devDependencies": {
-    "bluebird": "latest",
-    "chai": "latest",
-    "coveralls": "latest",
-    "jscs": "latest",
-    "jshint": "latest",
+    "chai": "^3.5.0",
+    "coveralls": "^2.13.0",
+    "dirty-chai": "^1.2.2",
+    "eslint": "^2.11.1",
+    "eslint-config-fullcube": "^1.0.46",
     "loopback": "^3.6.0",
     "loopback-boot": "^2.24.0",
     "loopback-component-explorer": "^4.2.0",
     "loopback-testing": "^1.4.0",
-    "mocha": "latest",
-    "nyc": "latest",
+    "mocha": "^3.3.0",
+    "nodemon": "^1.11.0",
+    "nyc": "^10.2.0",
     "supertest": "^3.0.0"
   }
 }
