@@ -1,0 +1,3 @@
+{
+  "extends": "fullcube/mocha"
+}
