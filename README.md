@@ -138,5 +138,5 @@ Run the tests in `test.js`
 Run with debugging output on:
 
 ```bash
-  DEBUG='loopback-ds-readonly-mixin' npm test
+  DEBUG='loopback:mixin:readonly' npm test
 ```

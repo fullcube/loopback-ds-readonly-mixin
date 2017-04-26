@@ -27,7 +27,7 @@
     "test"
   ],
   "scripts": {
-    "dev": "DEBUG=*:ping NODE_ENV=development nodemon test/fixtures/simple-app/server/server.js --watch ./lib --watch ./test --ignore db.json --ext js,json",
+    "dev": "DEBUG=loopback:mixin:readonly NODE_ENV=development nodemon test/fixtures/simple-app/server/server.js --watch ./lib --watch ./test --ignore db.json --ext js,json",
     "lint": "eslint .",
     "pretest": "npm run lint",
     "test": "NODE_ENV=test nyc --reporter=lcov --reporter=text --reporter=text-summary mocha test/*test.js",
