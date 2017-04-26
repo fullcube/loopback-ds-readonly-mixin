@@ -4,3 +4,8 @@ machine:
 test:
   post:
     - npm run coverage
+deployment:
+  master:
+    branch: master
+    commands:
+      - npm run semantic-release
