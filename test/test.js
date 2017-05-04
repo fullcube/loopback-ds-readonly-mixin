@@ -1,9 +1,9 @@
-const lt = require('loopback-testing')
 const chai = require('chai')
-const expect = chai.expect
-const TestDataBuilder = lt.TestDataBuilder
-const ref = TestDataBuilder.ref
+const lt = require('loopback-testing')
 const request = require('supertest')
+
+const { TestDataBuilder, TestDataBuilder: { ref } } = lt
+const { expect } = chai
 
 chai.use(require('dirty-chai'))
 
@@ -191,17 +191,17 @@ describe('loopback datasource readonly property (mixin sources.js)', function() 
     })
 
     describe('updateAll', function() {
-      lt.beforeEach.givenModel('Product', { name: 'book 1', type: 'book', status: 'disabled' }, 'book1')
-      lt.beforeEach.givenModel('Product', { name: 'book 2', type: 'book', status: 'pending' }, 'book2')
+      lt.beforeEach.givenModel('Product', { name: 'book 1', type: 'book', status: 'disabled' }, 'bookOne')
+      lt.beforeEach.givenModel('Product', { name: 'book 2', type: 'book', status: 'pending' }, 'bookTwo')
       it('should not change readonly properties with bulk updates', function() {
         return json('post', '/api/products/update')
           .query({ where: { type: 'book' } })
           .send({ status: 'disabled' })
           .expect(200)
-          .then(() => app.models.Product.findById(this.book1.id))
-          .then(book1 => expect(book1.status).to.equal('disabled'))
-          .then(() => app.models.Product.findById(this.book2.id))
-          .then(book2 => expect(book2.status).to.equal('pending'))
+          .then(() => app.models.Product.findById(this.bookOne.id))
+          .then(bookOne => expect(bookOne.status).to.equal('disabled'))
+          .then(() => app.models.Product.findById(this.bookTwo.id))
+          .then(bookTwo => expect(bookTwo.status).to.equal('pending'))
       })
     })
 
