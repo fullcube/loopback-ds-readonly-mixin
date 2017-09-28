@@ -44,7 +44,7 @@
     "chai": "^4.0.2",
     "condition-circle": "^1.5.0",
     "conventional-commit-types": "^2.1.0",
-    "coveralls": "^2.13.0",
+    "coveralls": "^3.0.0",
     "dirty-chai": "^2.0.1",
     "eslint-config-fullcube": "^3.0.0",
     "loopback": "^3.6.0",
