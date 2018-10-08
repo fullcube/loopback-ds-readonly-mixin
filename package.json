@@ -36,7 +36,7 @@
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "dependencies": {
-    "debug": "^3.0.0",
+    "debug": "^4.1.0",
     "depd": "^1.1.0"
   },
   "devDependencies": {
