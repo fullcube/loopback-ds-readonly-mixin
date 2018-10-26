@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "debug": "^3.0.0",
-    "depd": "^1.1.0"
+    "depd": "^2.0.0"
   },
   "devDependencies": {
     "@bubltechnology/customizable-commit-analyzer": "^1.0.2-0",
