@@ -17,6 +17,10 @@
       "type": "string",
       "default": "temp"
     },
+    "allowCreateProp": {
+      "type": "string",
+      "default": "temp"
+    },
     "personId": {
       "type": "string"
     }
@@ -33,7 +37,9 @@
   "methods": {},
   "mixins": {
     "ReadOnly": {
-      "status": true
+      "status": true,
+      "allowCreateProp": true,
+      "__allowCreation": ["allowCreateProp"]
     }
   }
 }

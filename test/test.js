@@ -60,6 +60,22 @@ describe('loopback datasource readonly property (mixin sources.js)', function() 
             expect(res.body.status).to.equal('temp')
           })
       })
+
+      it('should save readonly properties if allowCreate is set', function() {
+        return this.post('/api/products')
+          .send({
+            name: 'test product',
+            status: 'active',
+            allowCreateProp: 'new value',
+          })
+          .expect(200)
+          .then(res => {
+            expect(res.body.name).to.equal('test product')
+            expect(res.body.status).to.equal('temp')
+            expect(res.body.allowCreateProp).to.not.equal('temp')
+            expect(res.body.allowCreateProp).to.equal('new value')
+          })
+      })
     })
 
     describe('updateAttributes', function() {

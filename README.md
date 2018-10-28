@@ -125,6 +125,25 @@ In this example we mark the `status` and `role` fields as readonly.
   }
 ```
 
+Sometimes you'll want to allow some properties to be created. For example,
+you might want to allow the user to set a property on sign up and disallow
+any future changes.
+
+You can achieve this by passing an array with the keys in the `__allowCreation`
+option.
+
+```json
+  {
+    "mixins": {
+      "ReadOnly" : {
+        "status" : true,
+        "role" : true,
+        "__allowCreation": [ "role" ]
+      }
+    }
+  }
+```
+
 Any data set by a REST client in ReadOnly properties will be stripped out
 on the way to the server and will not be saved on the updated model instance.
 
