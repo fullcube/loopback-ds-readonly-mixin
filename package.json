@@ -49,7 +49,7 @@
     "eslint-config-fullcube": "^3.0.0",
     "loopback": "^3.6.0",
     "loopback-boot": "^2.24.0",
-    "loopback-component-explorer": "^4.2.0",
+    "loopback-component-explorer": "^6.4.0",
     "loopback-testing": "^1.4.0",
     "mocha": "^3.3.0",
     "nodemon": "^1.11.0",
