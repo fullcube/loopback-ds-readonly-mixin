@@ -48,7 +48,7 @@
     "dirty-chai": "^2.0.1",
     "eslint-config-fullcube": "^3.0.0",
     "loopback": "^3.6.0",
-    "loopback-boot": "^2.24.0",
+    "loopback-boot": "^3.3.1",
     "loopback-component-explorer": "^4.2.0",
     "loopback-testing": "^1.4.0",
     "mocha": "^3.3.0",
