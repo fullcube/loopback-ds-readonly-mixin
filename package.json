@@ -54,7 +54,7 @@
     "mocha": "^3.3.0",
     "nodemon": "^1.11.0",
     "nyc": "^11.0.0",
-    "semantic-release": "^6.3.2",
+    "semantic-release": "^16.0.4",
     "supertest": "^3.0.0"
   },
   "config": {
