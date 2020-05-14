@@ -52,7 +52,7 @@
     "loopback-component-explorer": "^4.2.0",
     "loopback-testing": "^1.4.0",
     "mocha": "^3.3.0",
-    "nodemon": "^1.11.0",
+    "nodemon": "^2.0.4",
     "nyc": "^11.0.0",
     "semantic-release": "^6.3.2",
     "supertest": "^3.0.0"
